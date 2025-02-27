@@ -1,0 +1,11 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: nextjs_docker_dev_prod
+    container_name: nextjs_docker_dev_prod
+    ports:
+      - "3002:3000"
+    volumes:
+      - .:/app

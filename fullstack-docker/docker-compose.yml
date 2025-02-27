@@ -1,0 +1,44 @@
+version: "3.9"
+name: nextjs_expressjs_postgres
+services:
+  db:
+    container_name: db
+    image: postgres:12
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    container_name: nextjs_backend
+    image: nextjs_backend
+    build:
+      context: ./backend
+      dockerfile: backend.dockerfile
+    restart: always
+    ports:
+      - "4000:4000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres?schema=public
+
+  frontend:
+    container_name: nextjs_frontend
+    image: nextjs_frontend
+    build:
+      context: ./frontend
+      dockerfile: frontend.dockerfile
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:4000
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:

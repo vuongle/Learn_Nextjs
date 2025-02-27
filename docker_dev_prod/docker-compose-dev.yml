@@ -1,0 +1,17 @@
+# docker compose -f docker-compose-dev.yml up -d --build
+# docker compose -f docker-compose-dev.yml down
+
+name: nextjs_docker_multi_stages
+services:
+  nextjs_web:
+    env_file:
+      - ./.env
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      args:
+        - NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
+    ports:
+      - "3000:3000"
+    environment:
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
